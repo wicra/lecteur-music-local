@@ -23,25 +23,15 @@ def is_package_installed(package_name):
         return False
 
 def install_ffmpeg():
-    # Vérifier si ffmpeg est déjà dans le PATH ou dans le répertoire local
-    ffmpeg_dir = os.path.join(os.path.dirname(__file__), "ffmpeg")
-    
-    if os.path.exists(ffmpeg_dir):
-        print("ffmpeg est déjà présent dans le répertoire local.")
-    else:
+    # Vérifier si ffmpeg est déjà dans le PATH
+    if shutil.which("ffmpeg") is None:
         try:
-            # Télécharger et extraire ffmpeg dans le répertoire local
-            print("Téléchargement et installation de ffmpeg pour Windows...")
-            ffmpeg_url = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip"
-            response = requests.get(ffmpeg_url)
-            with ZipFile(BytesIO(response.content)) as zip_ref:
-                zip_ref.extractall(ffmpeg_dir)
-            
-            # Ajouter le chemin de ffmpeg au PATH s'il n'y est pas déjà
-            if ffmpeg_dir not in os.environ["PATH"]:
-                os.environ["PATH"] += os.pathsep + os.path.abspath(ffmpeg_dir)
-                
-        except Exception as e:
+            # Vérifier si ffmpeg est dans /usr/local/bin/
+            ffmpeg_path = "/usr/local/bin/ffmpeg"
+            if not os.path.exists(ffmpeg_path):
+                raise FileNotFoundError("ffmpeg n'est pas trouvé dans /usr/local/bin/. Veuillez l'installer manuellement.")
+
+        except FileNotFoundError as e:
             print(f"Échec de l'installation de ffmpeg. Erreur : {e}")
             sys.exit(1)
 
@@ -69,7 +59,7 @@ def download_from_youtube(url, output_dir):
         
         print("Téléchargement et conversion en MP3 terminés.")
 
-        # Supprimer les fichiers d'origine (.webm, etc.) après conversion en MP3
+        # Supprimer les fichiers d'origine après conversion en MP3
         cleanup_after_conversion(output_dir)
         
     except subprocess.CalledProcessError as e:
