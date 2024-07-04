@@ -25,28 +25,28 @@ def is_package_installed(package_name):
 def install_ffmpeg():
     # Vérifier si ffmpeg est déjà dans le PATH ou dans le répertoire local
     if shutil.which("ffmpeg") is None:
-        # Si ffmpeg n'est pas trouvé, installer selon le système d'exploitation
-        try:
-            if sys.platform.startswith("linux"):
-                subprocess.check_call(["sudo", "apt", "install", "-y", "ffmpeg"])
-            elif sys.platform == "darwin":
-                subprocess.check_call(["brew", "install", "ffmpeg"])
-            elif sys.platform == "win32":
-                # Vérifier si ffmpeg est dans le répertoire local
-                ffmpeg_dir = os.path.join(os.path.dirname(__file__), "ffmpeg")
-                ffmpeg_exe = os.path.join(ffmpeg_dir, "ffmpeg.exe")
-                if not os.path.exists(ffmpeg_exe):
-                    # Si ffmpeg n'est pas trouvé dans le répertoire local, télécharger et extraire
-                    print("Téléchargement et installation de ffmpeg pour Windows...")
-                    ffmpeg_url = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip"
-                    response = requests.get(ffmpeg_url)
-                    with ZipFile(BytesIO(response.content)) as zip_ref:
-                        zip_ref.extractall(ffmpeg_dir)
-                    # Ajouter le chemin de ffmpeg au PATH
+        # Si ffmpeg n'est pas trouvé dans le PATH, vérifier dans le répertoire local
+        ffmpeg_dir = os.path.join(os.path.dirname(__file__), "ffmpeg")
+        ffmpeg_exe = os.path.join(ffmpeg_dir, "ffmpeg.exe")
+        
+        if os.path.exists(ffmpeg_exe):
+            print("ffmpeg est déjà présent dans le répertoire local.")
+        else:
+            try:
+                # Télécharger et extraire ffmpeg dans le répertoire local
+                print("Téléchargement et installation de ffmpeg pour Windows...")
+                ffmpeg_url = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip"
+                response = requests.get(ffmpeg_url)
+                with ZipFile(BytesIO(response.content)) as zip_ref:
+                    zip_ref.extractall(ffmpeg_dir)
+                
+                # Ajouter le chemin de ffmpeg au PATH s'il n'y est pas déjà
+                if ffmpeg_dir not in os.environ["PATH"]:
                     os.environ["PATH"] += os.pathsep + os.path.abspath(ffmpeg_dir)
-        except subprocess.CalledProcessError as e:
-            print(f"Échec de l'installation de ffmpeg. Erreur : {e}")
-            sys.exit(1)
+                    
+            except Exception as e:
+                print(f"Échec de l'installation de ffmpeg. Erreur : {e}")
+                sys.exit(1)
 
 def download_playlist(playlist_url, output_dir):
     # Vérifier et installer yt-dlp si ce n'est pas déjà fait
@@ -68,40 +68,36 @@ def download_playlist(playlist_url, output_dir):
             "--output", os.path.join(output_dir, "%(title)s.%(ext)s"),
             playlist_url
         ]
-        # Obtenir la liste des fichiers déjà présents dans le répertoire de sortie
-        existing_files = os.listdir(output_dir)
-
         # Lancer le téléchargement
         subprocess.check_call(command)
+        
+        print("Téléchargement terminé.")
 
         # Convertir tous les fichiers audio téléchargés en MP3
-        convert_to_mp3(output_dir, existing_files)
+        convert_to_mp3(output_dir)
     except subprocess.CalledProcessError as e:
         print(f"Échec du téléchargement de la playlist. Erreur : {e}")
         sys.exit(1)
 
-def convert_to_mp3(directory, existing_files):
+def convert_to_mp3(directory):
     # Parcourir tous les fichiers dans le répertoire spécifié
     for filename in os.listdir(directory):
         filepath = os.path.join(directory, filename)
         if os.path.isfile(filepath):
             # Vérifier si c'est un fichier audio
-            if any(filename.lower().endswith(ext) for ext in ['.mp3', '.aac', '.wav', '.flac', '.ogg']):
-                # Vérifier si le fichier existe déjà dans la liste des fichiers téléchargés
-                if filename not in existing_files:
-                    # Convertir en MP3 si ce n'est pas déjà le cas
-                    if not filename.lower().endswith('.mp3'):
-                        try:
-                            output_filename = os.path.splitext(filename)[0] + ".mp3"
-                            subprocess.check_call(["ffmpeg", "-i", filepath, os.path.join(directory, output_filename)])
-                            os.remove(filepath)  # Supprimer le fichier original après conversion
-                            print(f"Converti {filename} en MP3 avec succès.")
-                        except subprocess.CalledProcessError as e:
-                            print(f"Échec de la conversion de {filename} en MP3. Erreur : {e}")
-                    else:
-                        print(f"{filename} est déjà au format MP3.")
-                else:
-                    print(f"{filename} est déjà téléchargé.")
+            if any(filename.lower().endswith(ext) for ext in ['.mp3', '.aac', '.wav', '.flac', '.ogg', '.webm']):
+                # Vérifier si le fichier est déjà au format MP3
+                if filename.lower().endswith('.mp3'):
+                    print(f"{filename} est déjà au format MP3.")
+                    continue
+                
+                try:
+                    output_filename = os.path.splitext(filename)[0] + ".mp3"
+                    subprocess.check_call(["ffmpeg", "-i", filepath, os.path.join(directory, output_filename)])
+                    os.remove(filepath)  # Supprimer le fichier original après conversion
+                    print(f"Converti {filename} en MP3 avec succès.")
+                except subprocess.CalledProcessError as e:
+                    print(f"Échec de la conversion de {filename} en MP3. Erreur : {e}")
 
 if __name__ == "__main__":
     playlist_url = input("Entrez l'URL de la playlist YouTube : ")
