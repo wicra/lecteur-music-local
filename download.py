@@ -67,33 +67,24 @@ def download_from_youtube(url, output_dir):
         ]
         subprocess.check_call(command)
         
-        print("Téléchargement terminé.")
+        print("Téléchargement et conversion en MP3 terminés.")
 
-        # Convertir tous les fichiers audio téléchargés en MP3
-        convert_to_mp3(output_dir)
+        # Supprimer les fichiers d'origine (.webm, etc.) après conversion en MP3
+        cleanup_after_conversion(output_dir)
+        
     except subprocess.CalledProcessError as e:
         print(f"Échec du téléchargement depuis YouTube. Erreur : {e}")
         sys.exit(1)
 
-def convert_to_mp3(directory):
+def cleanup_after_conversion(directory):
     # Parcourir tous les fichiers dans le répertoire spécifié
     for filename in os.listdir(directory):
         filepath = os.path.join(directory, filename)
         if os.path.isfile(filepath):
-            # Vérifier si c'est un fichier audio
-            if any(filename.lower().endswith(ext) for ext in ['.mp3', '.aac', '.wav', '.flac', '.ogg', '.webm']):
-                # Vérifier si le fichier est déjà au format MP3
-                if filename.lower().endswith('.mp3'):
-                    print(f"{filename} est déjà au format MP3.")
-                    continue
-                
-                try:
-                    output_filename = os.path.splitext(filename)[0] + ".mp3"
-                    subprocess.check_call(["ffmpeg", "-i", filepath, os.path.join(directory, output_filename)])
-                    os.remove(filepath)  # Supprimer le fichier original après conversion
-                    print(f"Converti {filename} en MP3 avec succès.")
-                except subprocess.CalledProcessError as e:
-                    print(f"Échec de la conversion de {filename} en MP3. Erreur : {e}")
+            # Supprimer les fichiers non-MP3 (fichiers d'origine après conversion)
+            if not filename.lower().endswith('.mp3'):
+                os.remove(filepath)
+                print(f"Fichier {filename} supprimé après conversion.")
 
 if __name__ == "__main__":
     url = input("Entrez l'URL de la playlist YouTube ou le lien de la vidéo : ")
@@ -101,6 +92,6 @@ if __name__ == "__main__":
     # Nom du répertoire de sortie
     repertoire_sortie = os.path.join(os.getcwd(), "musiques")
 
-    print(f"Téléchargement dans le répertoire : {repertoire_sortie}")
+    print(f"Téléchargement et conversion dans le répertoire : {repertoire_sortie}")
     
     download_from_youtube(url, repertoire_sortie)
