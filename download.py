@@ -47,6 +47,7 @@ def install_ffmpeg():
         except subprocess.CalledProcessError as e:
             print(f"Échec de l'installation de ffmpeg. Erreur : {e}")
             sys.exit(1)
+
 def download_playlist(playlist_url, output_dir):
     # Vérifier et installer yt-dlp si ce n'est pas déjà fait
     install_package('yt_dlp')
@@ -67,32 +68,40 @@ def download_playlist(playlist_url, output_dir):
             "--output", os.path.join(output_dir, "%(title)s.%(ext)s"),
             playlist_url
         ]
+        # Obtenir la liste des fichiers déjà présents dans le répertoire de sortie
+        existing_files = os.listdir(output_dir)
+
+        # Lancer le téléchargement
         subprocess.check_call(command)
+
+        # Convertir tous les fichiers audio téléchargés en MP3
+        convert_to_mp3(output_dir, existing_files)
     except subprocess.CalledProcessError as e:
         print(f"Échec du téléchargement de la playlist. Erreur : {e}")
         sys.exit(1)
 
-    # Convertir tous les fichiers audio téléchargés en MP3
-    convert_to_mp3(output_dir)
-
-def convert_to_mp3(directory):
+def convert_to_mp3(directory, existing_files):
     # Parcourir tous les fichiers dans le répertoire spécifié
     for filename in os.listdir(directory):
         filepath = os.path.join(directory, filename)
         if os.path.isfile(filepath):
             # Vérifier si c'est un fichier audio
             if any(filename.lower().endswith(ext) for ext in ['.mp3', '.aac', '.wav', '.flac', '.ogg']):
-                # Convertir en MP3 si ce n'est pas déjà le cas
-                if not filename.lower().endswith('.mp3'):
-                    try:
-                        output_filename = os.path.splitext(filename)[0] + ".mp3"
-                        subprocess.check_call(["ffmpeg", "-i", filepath, os.path.join(directory, output_filename)])
-                        os.remove(filepath)  # Supprimer le fichier original après conversion
-                        print(f"Converti {filename} en MP3 avec succès.")
-                    except subprocess.CalledProcessError as e:
-                        print(f"Échec de la conversion de {filename} en MP3. Erreur : {e}")
+                # Vérifier si le fichier existe déjà dans la liste des fichiers téléchargés
+                if filename not in existing_files:
+                    # Convertir en MP3 si ce n'est pas déjà le cas
+                    if not filename.lower().endswith('.mp3'):
+                        try:
+                            output_filename = os.path.splitext(filename)[0] + ".mp3"
+                            subprocess.check_call(["ffmpeg", "-i", filepath, os.path.join(directory, output_filename)])
+                            os.remove(filepath)  # Supprimer le fichier original après conversion
+                            print(f"Converti {filename} en MP3 avec succès.")
+                        except subprocess.CalledProcessError as e:
+                            print(f"Échec de la conversion de {filename} en MP3. Erreur : {e}")
+                    else:
+                        print(f"{filename} est déjà au format MP3.")
                 else:
-                    print(f"{filename} est déjà au format MP3.")
+                    print(f"{filename} est déjà téléchargé.")
 
 if __name__ == "__main__":
     playlist_url = input("Entrez l'URL de la playlist YouTube : ")
