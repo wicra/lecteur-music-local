@@ -5,23 +5,21 @@ import shutil
 import requests
 from zipfile import ZipFile
 from io import BytesIO
-from datetime import datetime
 
 def install_package(package_name):
-    try:
-        subprocess.check_call([sys.executable, "-m", "pip", "install", "--upgrade", package_name])
-        print(f"{package_name} a été installé avec succès")
-    except subprocess.CalledProcessError as e:
-        print(f"Échec de l'installation de {package_name}. Erreur : {e}")
-        sys.exit(1)
+    if not is_package_installed(package_name):
+        try:
+            subprocess.check_call([sys.executable, "-m", "pip", "install", "--upgrade", package_name])
+            print(f"{package_name} a été installé avec succès")
+        except subprocess.CalledProcessError as e:
+            print(f"Échec de l'installation de {package_name}. Erreur : {e}")
+            sys.exit(1)
 
 def is_package_installed(package_name):
     try:
         subprocess.check_call([sys.executable, "-c", f"import {package_name}"])
         return True
-    except subprocess.CalledProcessError:
-        return False
-    except ImportError:
+    except (subprocess.CalledProcessError, ImportError):
         return False
 
 def install_ffmpeg():
@@ -44,16 +42,14 @@ def install_ffmpeg():
                     response = requests.get(ffmpeg_url)
                     with ZipFile(BytesIO(response.content)) as zip_ref:
                         zip_ref.extractall(ffmpeg_dir)
-                # Ajouter le chemin de ffmpeg au PATH
-                os.environ["PATH"] += os.pathsep + os.path.abspath(ffmpeg_dir)
+                    # Ajouter le chemin de ffmpeg au PATH
+                    os.environ["PATH"] += os.pathsep + os.path.abspath(ffmpeg_dir)
         except subprocess.CalledProcessError as e:
             print(f"Échec de l'installation de ffmpeg. Erreur : {e}")
             sys.exit(1)
-
 def download_playlist(playlist_url, output_dir):
     # Vérifier et installer yt-dlp si ce n'est pas déjà fait
-    if not is_package_installed('yt_dlp'):
-        install_package('yt_dlp')
+    install_package('yt_dlp')
     
     # Vérifier et installer ffmpeg si ce n'est pas déjà fait
     install_ffmpeg()
