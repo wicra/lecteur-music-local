@@ -34,10 +34,11 @@ def install_ffmpeg():
             elif sys.platform == "darwin":
                 subprocess.check_call(["brew", "install", "ffmpeg"])
             elif sys.platform == "win32":
-                # Télécharger et extraire ffmpeg pour Windows si ce n'est pas déjà fait
+                # Vérifier si ffmpeg est dans le répertoire local
                 ffmpeg_dir = os.path.join(os.path.dirname(__file__), "ffmpeg")
                 ffmpeg_exe = os.path.join(ffmpeg_dir, "ffmpeg.exe")
                 if not os.path.exists(ffmpeg_exe):
+                    # Si ffmpeg n'est pas trouvé dans le répertoire local, télécharger et extraire
                     print("Téléchargement et installation de ffmpeg pour Windows...")
                     ffmpeg_url = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip"
                     response = requests.get(ffmpeg_url)
