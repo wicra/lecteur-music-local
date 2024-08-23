@@ -1,29 +1,156 @@
-
-/* INDEX */
-
 body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    background-color: #f4f4f4;
+    font-family: 'Nunito', sans-serif;
+    background-color: #f7f7ff;
     margin: 0;
-    padding: 20px;
+    padding: 10px;
+    color: #444;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 100vw;
+    overflow-x: hidden;
 }
 
-/* PALYER */
+/* Titre principal */
+h1 {
+    font-size: 55px;
+    color: #6c63ff;
+    margin-bottom: 60px;
+    text-align: center;
+}
 
+/* Sections principales */
+section {
+    width: 100%;
+    max-width: 750px;
+    background-color: #ffffff;
+    border-radius: 20px;
+    padding: 70px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 60px;
+}
+
+/* Titre de la piste */
 #trackTitle {
-    font-size: 24px;
-    margin-bottom: 20px;
+    text-align: center;
+    font-size: 35px;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 60px;
 }
+
+/* Lecteur audio */
 audio {
-    margin-top: 20px;
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 60px;
 }
+
+/* Boutons de contrôle */
 .controls {
-    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+	margin-bottom: 60px;
 }
-button {
-    padding: 10px 20px;
-    margin: 5px;
-    font-size: 16px;
+
+.controls button {
+    flex: 1;
+    padding: 10px;
+    font-size: 30px;
+    border: none;
+    border-radius: 10px;
+    background-color: #6c63ff;
+    color: white;
     cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.controls button:hover {
+    background-color: #574bcc;
+}
+
+/* Formulaire */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    
+}
+
+form label {
+    font-size: 30px;
+    color: #444;
+}
+
+form input[type="text"] {
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    font-size: 28px;
+    width: 100%;
+}
+
+form input[type="submit"] {
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    background-color: #6c63ff;
+    color: white;
+    font-size: 28px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form input[type="submit"]:hover {
+    background-color: #574bcc;
+}
+
+/* Affichage du log */
+#log-content {
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #f0f0ff;
+    border: 1px solid #ddd;
+    font-size: 20px;
+    color: #666;
+    max-height: 200px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+}
+
+/* Styles spécifiques pour les petits écrans */
+@media (max-width: 600px) {
+    body {
+        padding: 15px;
+    }
+
+    section {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 35px;
+    }
+
+    .controls button {
+        padding: 12px;
+        font-size: 30px;
+    }
+
+    form input[type="text"] {
+        font-size: 28px;
+        padding: 10px;
+    }
+
+    form input[type="submit"] {
+        font-size: 28px;
+        padding: 12px;
+    }
+
+    #log-content {
+        font-size: 25px;
+        padding: 10px;
+    }
 }

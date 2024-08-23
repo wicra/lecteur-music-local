@@ -1,30 +1,37 @@
-<section>
-    <h1>Téléchargez et convertissez une vidéo YouTube en MP3</h1>
+<?php
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $url = escapeshellarg($_POST['url']);
+    $pythonScript = '/var/www/html/download_playlist_yt/script_download/download_on_terminal.py';
+    $logFile = '/var/www/html/download_playlist_yt/log.txt';
 
-    <!-- Formulaire pour entrer l'URL -->
-    <form action="index.php" method="post">
-        <label for="url">URL de la vidéo ou de la playlist YouTube :</label><br>
-        <input type="text" id="url" name="url" required><br><br>
-        <input type="submit" value="Télécharger">
-    </form>
+    // Exécuter le script Python en arrière-plan
+    $command = "nohup python3 $pythonScript $url > $logFile 2>&1 &";
+    shell_exec($command);
 
-    <?php
-    // Vérifie si le formulaire a été soumis
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        // Récupère l'URL envoyée par le formulaire
-        $url = escapeshellarg($_POST['url']);
+    // Réponse AJAX, ne rien afficher ici directement
+    exit;
+}
 
-        // Chemin vers le script Python
-        $pythonScript = '../script_download/download_on_terminal.py'; // Assurez-vous que ce fichier est dans le même répertoire
-
-        // Commande pour exécuter le script Python avec l'URL comme argument
-        $command = "bash python3 $pythonScript $url";
-
-        // Exécute la commande
-        $output = shell_exec($command);
-
-        // Affiche le résultat
-        echo "<h2>Résultat de l'exécution :</h2><pre>$output</pre>";
+// Traitement pour lire le contenu du fichier de log
+if (isset($_GET['action']) && $_GET['action'] === 'read_log') {
+    $logFile = '/var/www/html/download_playlist_yt/log.txt';
+    if (file_exists($logFile)) {
+        // Lire le contenu du fichier de log
+        $logContent = file_get_contents($logFile);
+        echo htmlspecialchars($logContent); // Utiliser htmlspecialchars pour échapper les caractères spéciaux
+    } else {
+        echo "Le fichier de log n'existe pas encore.";
     }
-    ?>
-</section>
+    exit; // Éviter que le reste de la page soit affiché
+}
+
+// Traitement pour nettoyer le fichier de log
+if (isset($_GET['action']) && $_GET['action'] === 'cleanup_log') {
+    $logFile = '/var/www/html/download_playlist_yt/log.txt';
+    if (file_exists($logFile)) {
+        // Supprimer le fichier de log
+        unlink($logFile);
+    }
+    exit; // Éviter que le reste de la page soit affiché
+}
+?>
