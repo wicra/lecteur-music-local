@@ -15,7 +15,7 @@
         $url = escapeshellarg($_POST['url']);
 
         // Chemin vers le script Python
-        $pythonScript = 'download_on_terminal.py'; // Assurez-vous que ce fichier est dans le même répertoire
+        $pythonScript = '../script_download/download_on_terminal.py'; // Assurez-vous que ce fichier est dans le même répertoire
 
         // Commande pour exécuter le script Python avec l'URL comme argument
         $command = "bash python3 $pythonScript $url";

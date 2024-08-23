@@ -1,0 +1,111 @@
+# Ignorer les fichiers de configuration IDE
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Ignorer les fichiers de log
+*.log
+
+# Ignorer les fichiers temporaires de système
+.DS_Store
+Thumbs.db
+
+# Ignorer les répertoires temporaires
+tmp/
+temp/
+.cache/
+*.tmp
+
+# Ignorer les fichiers générés par la compilation
+*.o
+*.obj
+*.so
+*.dylib
+*.dll
+*.exe
+
+# Ignorer les dépendances de Node.js
+node_modules/
+
+# Ignorer les fichiers de build et dist
+dist/
+build/
+out/
+
+# Ignorer les fichiers de base de données
+*.sqlite
+*.db
+*.db-journal
+
+# Ignorer les fichiers de configuration sensibles
+.env
+*.pem
+*.key
+*.crt
+
+# Ignorer les fichiers de compilation de Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+
+# Ignorer les fichiers de composer PHP
+vendor/
+
+# Ignorer les fichiers de configuration de Laravel
+/storage/
+.env
+
+# Ignorer les fichiers de cache de Composer
+composer.lock
+*.phar
+
+# Ignorer les fichiers de binaires
+*.exe
+*.out
+*.app
+*.bin
+
+# Ignorer les fichiers de lock de NPM
+package-lock.json
+yarn.lock
+
+# Ignorer les fichiers de sauvegarde
+*~
+*.bak
+
+# Ignorer les fichiers de test de couverture
+coverage/
+
+# Ignorer les fichiers de mise en cache
+*.cache
+*.pid
+*.pid.lock
+
+# Ignorer les fichiers de configuration de Docker
+*.dockerignore
+.docker/
+
+# Ignorer les fichiers de configurations spécifiques à l'environnement
+*.local
+*.local.*
+
+# Ignorer les fichiers de documentation générée
+docs/generated/
+
+# Ignorer les fichiers de répertoires de build spécifiques à certains outils
+/.idea
+/.vscode
+/.project
+/.classpath
+
+# Ignorer les fichiers de dépendances de Ruby
+/.bundle
+*.gem
+Gemfile.lock
+
