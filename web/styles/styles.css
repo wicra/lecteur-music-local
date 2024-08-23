@@ -1,0 +1,29 @@
+
+/* INDEX */
+
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+}
+
+/* PALYER */
+
+#trackTitle {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+audio {
+    margin-top: 20px;
+}
+.controls {
+    margin-top: 20px;
+}
+button {
+    padding: 10px 20px;
+    margin: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
