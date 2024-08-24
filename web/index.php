@@ -23,6 +23,7 @@
     
     <section>
         <div id="trackTitle">Loading...</div>
+        <div id="trackInfo">0 / 0</div>
 
         <audio id="audioPlayer" controls></audio>
 
@@ -31,8 +32,8 @@
             <button onclick="nextTrack()"><i class="fas fa-forward"></i> Next</button>
             <button onclick="toggleShuffle()"><i class="fas fa-random"></i> Shuffle: <span id="shuffleStatus">Off</span></button>
             <button onclick="toggleRepeat()"><i class="fas fa-redo"></i> Repeat: <span id="repeatStatus">Off</span></button>
+            <button onclick="deleteCurrentTrack()"><i class="fas fa-trash"></i> Delete</button> <!-- Nouveau bouton de suppression -->
         </div>
-
 
         <script>
             var playlist = <?php echo json_encode($playlist); ?>;
@@ -41,21 +42,30 @@
             var isRepeat = false;
             var audioPlayer = document.getElementById('audioPlayer');
             var trackTitle = document.getElementById('trackTitle');
+            var trackInfo = document.getElementById('trackInfo');
 
-            // Fonction pour extraire le nom de la piste sans le chemin ni l'extension
             function getTrackName(filePath) {
                 return filePath.split('/').pop().split('.').shift();
             }
 
-            // Fonction pour charger et jouer une piste
-            function loadTrack(index) {
-                currentTrack = index;
-                audioPlayer.src = playlist[currentTrack];
-                trackTitle.innerText = getTrackName(playlist[currentTrack]); // Met à jour le titre
-                audioPlayer.play();
+            function updateTrackInfo() {
+                trackInfo.innerText = (currentTrack + 1) + ' / ' + playlist.length;
             }
 
-            // Fonction pour jouer la piste suivante
+            function loadTrack(index) {
+                currentTrack = index;
+                if (playlist.length > 0) {
+                    audioPlayer.src = playlist[currentTrack];
+                    trackTitle.innerText = getTrackName(playlist[currentTrack]);
+                    audioPlayer.play();
+                    updateTrackInfo();
+                } else {
+                    trackTitle.innerText = "No tracks available";
+                    trackInfo.innerText = "0 / 0";
+                    audioPlayer.src = "";
+                }
+            }
+
             function nextTrack() {
                 if (isShuffle) {
                     currentTrack = Math.floor(Math.random() * playlist.length);
@@ -65,36 +75,45 @@
                 loadTrack(currentTrack);
             }
 
-            // Fonction pour jouer la piste précédente
             function previousTrack() {
                 currentTrack = (currentTrack - 1 + playlist.length) % playlist.length;
                 loadTrack(currentTrack);
             }
 
-            // Fonction pour activer/désactiver le mode aléatoire
             function toggleShuffle() {
                 isShuffle = !isShuffle;
                 document.getElementById('shuffleStatus').innerText = isShuffle ? 'On' : 'Off';
             }
 
-            // Fonction pour activer/désactiver le mode répétition
             function toggleRepeat() {
                 isRepeat = !isRepeat;
                 document.getElementById('repeatStatus').innerText = isRepeat ? 'On' : 'Off';
                 audioPlayer.loop = isRepeat;
             }
 
-            // Chargement de la première piste
+            function deleteCurrentTrack() {
+                if (playlist.length > 0) {
+                    var confirmation = confirm("Are you sure you want to delete the current track: " + getTrackName(playlist[currentTrack]) + "?");
+                    if (confirmation) {
+                        playlist.splice(currentTrack, 1);
+                        if (currentTrack >= playlist.length) {
+                            currentTrack = 0;
+                        }
+                        loadTrack(currentTrack);
+                    }
+                }
+            }
+
             loadTrack(currentTrack);
 
-            // Passage à la piste suivante lorsque la piste actuelle est terminée
             audioPlayer.addEventListener('ended', function() {
                 if (!isRepeat) {
                     nextTrack();
                 }
             });
-        </script> 
+        </script>
     </section>
+
 
     <!-- ADD PLAYLIST PAGE -->
     <section>

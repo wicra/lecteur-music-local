@@ -1,3 +1,4 @@
+/* Style général */
 body {
     font-family: 'Nunito', sans-serif;
     background-color: #f7f7ff;
@@ -34,10 +35,18 @@ section {
 /* Titre de la piste */
 #trackTitle {
     text-align: center;
-    font-size: 35px;
+    font-size: 40px;
     font-weight: 600;
     color: #444;
-    margin-bottom: 60px;
+    margin-bottom: 10px;
+}
+
+/* Informations sur la piste (ex : 2 / 10) */
+#trackInfo {
+    text-align: center;
+    font-size: 25px;
+    color: #666;
+    margin-bottom: 20px;
 }
 
 /* Lecteur audio */
@@ -52,12 +61,12 @@ audio {
     display: flex;
     justify-content: space-between;
     gap: 10px;
-	margin-bottom: 60px;
+    margin-bottom: 60px;
 }
 
 .controls button {
     flex: 1;
-    padding: 10px;
+    padding: 15px;
     font-size: 30px;
     border: none;
     border-radius: 10px;
@@ -71,12 +80,21 @@ audio {
     background-color: #574bcc;
 }
 
+/* Spécifique pour le bouton de suppression */
+.controls button:last-child {
+    background-color: #ff6b6b;
+}
+
+.controls button:last-child:hover {
+    background-color: #cc4c4c;
+}
+
+
 /* Formulaire */
 form {
     display: flex;
     flex-direction: column;
     gap: 25px;
-    
 }
 
 form label {
@@ -85,7 +103,7 @@ form label {
 }
 
 form input[type="text"] {
-    padding: 10px;
+    padding: 15px;
     border-radius: 10px;
     border: 1px solid #ddd;
     font-size: 28px;
@@ -93,7 +111,7 @@ form input[type="text"] {
 }
 
 form input[type="submit"] {
-    padding: 12px;
+    padding: 20px;
     border-radius: 10px;
     border: none;
     background-color: #6c63ff;
@@ -109,11 +127,11 @@ form input[type="submit"]:hover {
 
 /* Affichage du log */
 #log-content {
-    padding: 10px;
+    padding: 15px;
     border-radius: 10px;
     background-color: #f0f0ff;
     border: 1px solid #ddd;
-    font-size: 20px;
+    font-size: 22px;
     color: #666;
     max-height: 200px;
     overflow-y: auto;
@@ -123,34 +141,34 @@ form input[type="submit"]:hover {
 /* Styles spécifiques pour les petits écrans */
 @media (max-width: 600px) {
     body {
-        padding: 15px;
+        padding: 10px;
     }
 
     section {
-        padding: 20px;
+        padding: 50px;
     }
 
     h1 {
-        font-size: 35px;
+        font-size: 40px;
     }
 
     .controls button {
-        padding: 12px;
-        font-size: 30px;
+        padding: 15px;
+        font-size: 28px;
     }
 
     form input[type="text"] {
-        font-size: 28px;
-        padding: 10px;
+        font-size: 26px;
+        padding: 15px;
     }
 
     form input[type="submit"] {
-        font-size: 28px;
-        padding: 12px;
+        font-size: 26px;
+        padding: 20px;
     }
 
     #log-content {
-        font-size: 25px;
-        padding: 10px;
+        font-size: 22px;
+        padding: 15px;
     }
 }
