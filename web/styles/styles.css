@@ -19,6 +19,10 @@
 /* /////////////////////////// */
 /*       GENERAL STYLE       */
 /* /////////////////////////// */
+html {
+    -webkit-text-size-adjust: 100%;
+}
+
 body {
     font-family: var(--secondary-font);
     background-color: var(--background-color);

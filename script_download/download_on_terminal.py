@@ -4,6 +4,7 @@ import sys
 import shutil
 import argparse
 import venv
+import json
 
 def create_venv(venv_dir):
     """Crée un environnement virtuel dans le répertoire spécifié."""
@@ -15,7 +16,6 @@ def create_venv(venv_dir):
 
 def install_package(venv_dir, package_name):
     """Assure que le package spécifié est installé dans l'environnement virtuel."""
-    python_path = os.path.join(venv_dir, 'bin', 'python')
     pip_path = os.path.join(venv_dir, 'bin', 'pip')
     
     if not is_package_installed(venv_dir, package_name):
@@ -41,14 +41,11 @@ def install_ffmpeg():
         print("ffmpeg n'est pas installé. Tentative d'installation...")
         try:
             if sys.platform.startswith('linux'):
-                # Pour les systèmes basés sur Debian/Ubuntu
                 subprocess.check_call(['sudo', 'apt-get', 'update'])
                 subprocess.check_call(['sudo', 'apt-get', 'install', '-y', 'ffmpeg'])
             elif sys.platform == 'darwin':
-                # Pour macOS
                 subprocess.check_call(['brew', 'install', 'ffmpeg'])
             elif sys.platform == 'win32':
-                # Pour Windows
                 print("Veuillez installer ffmpeg manuellement depuis https://ffmpeg.org/download.html")
             else:
                 print("Système d'exploitation non pris en charge pour l'installation automatique de ffmpeg.")
@@ -59,6 +56,22 @@ def install_ffmpeg():
     else:
         print("ffmpeg est déjà installé.")
 
+def get_video_info(venv_dir, url):
+    """Récupère les informations sur la vidéo/playlist depuis YouTube."""
+    yt_dlp_path = os.path.join(venv_dir, 'bin', 'yt-dlp')
+    command = [yt_dlp_path, '-J', url]  # '-J' pour obtenir les métadonnées en JSON
+    try:
+        result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True, text=True)
+        return json.loads(result.stdout)
+    except subprocess.CalledProcessError as e:
+        print(f"Erreur lors de la récupération des informations de la vidéo. Erreur : {e}")
+        return None
+
+def should_skip_video(video_duration):
+    """Vérifie si la vidéo doit être ignorée en fonction de sa durée."""
+    max_duration_seconds = 6 * 60  # 6 minutes en secondes
+    return video_duration > max_duration_seconds
+
 def download_from_youtube(venv_dir, url, output_dir):
     """Télécharge une vidéo ou une playlist depuis YouTube et la convertit en MP3."""
     install_package(venv_dir, 'yt_dlp')
@@ -67,15 +80,37 @@ def download_from_youtube(venv_dir, url, output_dir):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    python_path = os.path.join(venv_dir, 'bin', 'python')
+    info = get_video_info(venv_dir, url)
+
+    if info is None:
+        print("Impossible de récupérer les informations de la vidéo/playlist.")
+        return
+
+    if 'entries' in info:
+        # C'est une playlist
+        for entry in info['entries']:
+            if entry is not None and not should_skip_video(entry['duration']):
+                download_single_video(venv_dir, entry['webpage_url'], output_dir)
+            else:
+                print(f"Vidéo '{entry['title']}' ignorée (durée: {entry['duration'] // 60} minutes).")
+    else:
+        # C'est une seule vidéo
+        if not should_skip_video(info['duration']):
+            download_single_video(venv_dir, url, output_dir)
+        else:
+            print(f"Vidéo '{info['title']}' ignorée (durée: {info['duration'] // 60} minutes).")
+
+def download_single_video(venv_dir, url, output_dir):
+    """Télécharge une seule vidéo et la convertit en MP3."""
+    yt_dlp_path = os.path.join(venv_dir, 'bin', 'yt-dlp')
+    command = [
+        yt_dlp_path,
+        "--extract-audio",
+        "--audio-format", "mp3",
+        "--output", os.path.join(output_dir, "%(title)s.%(ext)s"),
+        url
+    ]
     try:
-        command = [
-            os.path.join(venv_dir, 'bin', 'yt-dlp'),
-            "--extract-audio",
-            "--audio-format", "mp3",
-            "--output", os.path.join(output_dir, "%(title)s.%(ext)s"),
-            url
-        ]
         subprocess.check_call(command)
         print("Téléchargement et conversion en MP3 terminés.")
         cleanup_after_conversion(output_dir)
@@ -95,8 +130,7 @@ def main():
     parser = argparse.ArgumentParser(description="Télécharge des vidéos ou des playlists depuis YouTube et les convertit en MP3.")
     parser.add_argument('url', type=str, help="L'URL de la vidéo ou de la playlist YouTube à télécharger.")
     args = parser.parse_args()
-    
-    # Définir le répertoire de l'environnement virtuel et le répertoire de sortie
+
     venv_dir = '/var/www/html/download_playlist_yt/venv'
     repertoire_sortie = '/var/www/html/download_playlist_yt/playlist'
     
@@ -105,7 +139,6 @@ def main():
     print(f"Téléchargement et conversion dans le répertoire : {repertoire_sortie}")
     download_from_youtube(venv_dir, args.url, repertoire_sortie)
     
-    # Nettoyer après l'exécution (désactiver l'environnement virtuel en supprimant le répertoire)
     shutil.rmtree(venv_dir)
     print(f"Environnement virtuel {venv_dir} supprimé.")
 
