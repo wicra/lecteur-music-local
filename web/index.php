@@ -95,11 +95,23 @@
                 if (playlist.length > 0) {
                     var confirmation = confirm("Are you sure you want to delete the current track: " + getTrackName(playlist[currentTrack]) + "?");
                     if (confirmation) {
-                        playlist.splice(currentTrack, 1);
-                        if (currentTrack >= playlist.length) {
-                            currentTrack = 0;
-                        }
-                        loadTrack(currentTrack);
+                        var trackToDelete = playlist[currentTrack];
+
+                        // Requête AJAX pour supprimer le fichier du serveur
+                        var xhr = new XMLHttpRequest();
+                        xhr.open('POST', 'pages/delete_track.php', true);
+                        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                        xhr.onreadystatechange = function() {
+                            if (xhr.readyState === 4 && xhr.status === 200) {
+                                // Retirer la piste de la playlist
+                                playlist.splice(currentTrack, 1);
+                                if (currentTrack >= playlist.length) {
+                                    currentTrack = 0;
+                                }
+                                loadTrack(currentTrack);
+                            }
+                        };
+                        xhr.send('track=' + encodeURIComponent(trackToDelete));
                     }
                 }
             }
