@@ -1,0 +1,23 @@
+<!-- music-animated-favicon.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+    <!-- Définir l'animation des barres -->
+    <style>
+        @keyframes bounce {
+            0%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(2); }
+        }
+        .bar {
+            animation: bounce 1s infinite;
+            transform-origin: bottom;
+        }
+        .bar:nth-child(1) { animation-delay: 0s; }
+        .bar:nth-child(2) { animation-delay: 0.2s; }
+        .bar:nth-child(3) { animation-delay: 0.4s; }
+        .bar:nth-child(4) { animation-delay: 0.6s; }
+    </style>
+    <!-- Dessiner les barres de volume -->
+    <rect x="4" y="12" width="4" height="8" fill="#3F51B5" class="bar"/> <!-- Bleu indigo -->
+    <rect x="10" y="12" width="4" height="8" fill="#FF7043" class="bar"/> <!-- Corail chaud -->
+    <rect x="16" y="12" width="4" height="8" fill="#FF8A65" class="bar"/> <!-- Corail clair -->
+    <rect x="22" y="12" width="4" height="8" fill="#FFAB91" class="bar"/> <!-- Corail pâle -->
+</svg>
