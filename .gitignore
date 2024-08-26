@@ -42,7 +42,7 @@ out/
 *.db-journal
 
 # Ignorer les fichiers de configuration sensibles
-
+*.env
 *.pem
 *.key
 *.crt
