@@ -41,10 +41,10 @@ body {
 /*      MAIN TITLE       */
 /* /////////////////////////// */
 h1 {
-    font-size: 50px;
+    font-size: 3rem;
     font-family: var(--primary-font);
     color: var(--primary-color);
-    margin-bottom: 40px;
+    margin-bottom: 2rem;
     text-align: center;
 }
 
@@ -53,12 +53,12 @@ h1 {
 /* /////////////////////////// */
 .search-section {
     width: 100%;
-    max-width: 700px;
+    max-width: 600px;
     background-color: var(--white-color);
-    border-radius: 15px;
-    padding: 10px 50px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-    margin-bottom: 30px;
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
 }
 
 .search-bar {
@@ -67,12 +67,12 @@ h1 {
 }
 
 #searchInput {
-    padding: 12px;
+    padding: 0.75rem;
     border-radius: 8px;
     border: 1px solid var(--border-color);
-    font-size: 18px;
+    font-size: 1rem;
     width: 100%;
-    max-width: 700px;
+    max-width: 600px;
     transition: border-color 0.3s ease;
 }
 
@@ -88,8 +88,8 @@ h1 {
 }
 
 #searchResults li {
-    padding: 12px;
-    margin-bottom: 10px;
+    padding: 0.75rem;
+    margin-bottom: 0.75rem;
     border: 1px solid var(--border-color);
     border-radius: 8px;
     cursor: pointer;
@@ -108,12 +108,12 @@ h1 {
 /* /////////////////////////// */
 section {
     width: 100%;
-    max-width: 700px;
+    max-width: 600px;
     background-color: var(--white-color);
-    border-radius: 15px;
-    padding: 50px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-    margin-bottom: 40px;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
 }
 
 /* /////////////////////////// */
@@ -121,10 +121,10 @@ section {
 /* /////////////////////////// */
 #trackTitle {
     text-align: center;
-    font-size: 36px;
+    font-size: 2.25rem;
     font-weight: 600;
     color: var(--text-color);
-    margin-bottom: 10px;
+    margin-bottom: 1rem;
 }
 
 /* /////////////////////////// */
@@ -132,9 +132,9 @@ section {
 /* /////////////////////////// */
 #trackInfo {
     text-align: center;
-    font-size: 20px;
+    font-size: 1.25rem;
     color: var(--text-secondary-color);
-    margin-bottom: 20px;
+    margin-bottom: 1.5rem;
 }
 
 /* /////////////////////////// */
@@ -142,8 +142,8 @@ section {
 /* /////////////////////////// */
 audio {
     width: 100%;
-    border-radius: 15px;
-    margin-bottom: 40px;
+    border-radius: 12px;
+    margin-bottom: 2rem;
     background-color: var(--white-color);
     border: 1px solid var(--border-color);
 }
@@ -153,20 +153,20 @@ audio {
 /* /////////////////////////// */
 audio::-webkit-media-controls-panel {
     background-color: var(--white-color);
-    border-radius: 15px;
+    border-radius: 12px;
 }
 
 audio::-webkit-media-controls-timeline {
     background-color: var(--white-color);
     border: 1px solid var(--border-color);
-    border-radius: 15px;
+    border-radius: 12px;
 }
 
 audio::-webkit-media-controls-play-button,
 audio::-webkit-media-controls-pause-button {
     background-color: var(--primary-color);
     border-radius: 50%;
-    padding: 8px;
+    padding: 0.5rem;
     transition: background-color 0.3s ease;
 }
 
@@ -179,14 +179,14 @@ audio::-webkit-media-controls-mute-button,
 audio::-webkit-media-controls-volume-slider {
     background-color: var(--white-color);
     border: 1px solid var(--border-color);
-    border-radius: 15px;
+    border-radius: 12px;
 }
 
 audio::-webkit-media-controls-current-time-display,
 audio::-webkit-media-controls-time-remaining-display {
     color: var(--text-secondary-color);
-    font-size: 14px;
-    padding: 4px;
+    font-size: 0.875rem;
+    padding: 0.25rem;
 }
 
 /* /////////////////////////// */
@@ -194,14 +194,14 @@ audio::-webkit-media-controls-time-remaining-display {
 /* /////////////////////////// */
 audio::-moz-media-controls-panel {
     background-color: var(--white-color);
-    border-radius: 15px;
+    border-radius: 12px;
 }
 
 audio::-moz-media-controls-play-button,
 audio::-moz-media-controls-pause-button {
     background-color: var(--primary-color);
     border-radius: 50%;
-    padding: 8px;
+    padding: 0.5rem;
     transition: background-color 0.3s ease;
 }
 
@@ -214,14 +214,14 @@ audio::-moz-media-controls-mute-button,
 audio::-moz-media-controls-volume-slider {
     background-color: var(--white-color);
     border: 1px solid var(--border-color);
-    border-radius: 15px;
+    border-radius: 12px;
 }
 
 audio::-moz-media-controls-current-time-display,
 audio::-moz-media-controls-time-remaining-display {
     color: var(--text-secondary-color);
-    font-size: 14px;
-    padding: 4px;
+    font-size: 0.875rem;
+    padding: 0.25rem;
 }
 
 /* /////////////////////////// */
@@ -231,13 +231,13 @@ audio::-moz-media-controls-time-remaining-display {
     display: flex;
     justify-content: space-between;
     gap: 10px;
-    margin-bottom: 40px;
+    margin-bottom: 2rem;
 }
 
 .controls button {
     flex: 1;
-    padding: 12px;
-    font-size: 28px;
+    padding: 0.75rem;
+    font-size: 1.5rem;
     border: none;
     border-radius: 8px;
     background-color: var(--primary-color);
@@ -264,29 +264,29 @@ audio::-moz-media-controls-time-remaining-display {
 form {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 1.5rem;
 }
 
 form label {
-    font-size: 24px;
+    font-size: 1.5rem;
     color: var(--text-color);
 }
 
 form input[type="text"] {
-    padding: 12px;
+    padding: 0.75rem;
     border-radius: 8px;
     border: 1px solid var(--border-color);
-    font-size: 18px;
+    font-size: 1rem;
     width: 100%;
 }
 
 form input[type="submit"] {
-    padding: 15px;
+    padding: 0.75rem;
     border-radius: 8px;
     border: none;
     background-color: var(--primary-color);
     color: var(--white-color);
-    font-size: 18px;
+    font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
@@ -296,14 +296,41 @@ form input[type="submit"]:hover {
 }
 
 /* /////////////////////////// */
+/*     CANCEL BUTTON        */
+/* /////////////////////////// */
+#cancel-download {
+    display: none; /* Initialement caché, affiché lors du démarrage du téléchargement */
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    border: 1px solid var(--secondary-color);
+    background-color: var(--white-color);
+    color: var(--secondary-color);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-top: 1.5rem; /* Espacement au-dessus pour séparer du contenu précédent */
+    display: block; /* S'assurer que le bouton est affiché comme un bloc */
+    margin-left: auto;
+    margin-right: auto; /* Centrer le bouton horizontalement */
+}
+
+#cancel-download:hover {
+    background-color: var(--secondary-color);
+    color: var(--white-color);
+    border-color: var(--secondary-color);
+}
+
+/* /////////////////////////// */
 /*       LOG DISPLAY      */
 /* /////////////////////////// */
 #log-content {
-    padding: 12px;
+    padding: 0.75rem;
     border-radius: 8px;
     background-color: #F0F4F1;
     border: 1px solid var(--border-color);
-    font-size: 18px;
+    font-size: 1rem;
     color: var(--text-secondary-color);
     max-height: 200px;
     overflow-y: auto;
@@ -319,30 +346,30 @@ form input[type="submit"]:hover {
     }
 
     section {
-        padding: 40px;
+        padding: 1.5rem;
     }
 
     h1 {
-        font-size: 36px;
+        font-size: 2rem;
     }
 
     .controls button {
-        padding: 10px;
-        font-size: 24px;
+        padding: 0.5rem;
+        font-size: 1.25rem;
     }
 
     form input[type="text"] {
-        font-size: 16px;
-        padding: 12px;
+        font-size: 0.875rem;
+        padding: 0.75rem;
     }
 
     form input[type="submit"] {
-        font-size: 16px;
-        padding: 12px;
+        font-size: 0.875rem;
+        padding: 0.75rem;
     }
 
     #log-content {
-        font-size: 16px;
-        padding: 12px;
+        font-size: 0.875rem;
+        padding: 0.75rem;
     }
 }

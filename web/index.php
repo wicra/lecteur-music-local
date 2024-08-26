@@ -180,7 +180,6 @@
             </script>
         </section>
 
-
         <!-- ADD PLAYLIST PAGE -->
         <section>
             <form id="download-form">
@@ -188,6 +187,8 @@
                 <input type="text" id="url" name="url" placeholder="Enter URL" required>
                 <input type="submit" value="Download">
             </form>
+
+            <button id="cancel-download" style="display:none;">Annuler le téléchargement</button>
 
             <h3>Execution Results:</h3>
             <div id="log-content">Loading results...</div>
@@ -201,7 +202,9 @@
                 xhr.open('POST', 'pages/add_music_or_playlist.php', true);
                 xhr.onreadystatechange = function() {
                     if (xhr.readyState === 4 && xhr.status === 200) {
+                        console.log("Script Python lancé.");
                         refreshLog();
+                        document.getElementById('cancel-download').style.display = 'inline'; // Afficher le bouton d'annulation
                     }
                 };
                 xhr.send(formData);
@@ -213,23 +216,53 @@
                 xhr.onreadystatechange = function() {
                     if (xhr.readyState === 4 && xhr.status === 200) {
                         var logContent = xhr.responseText;
-                        logContent = logContent.replace(/<[^>]*>/g, '');
+                        logContent = logContent.replace(/<[^>]*>/g, ''); // Enlever les balises HTML
+                        
+                        document.getElementById('log-content').innerText = logContent;
+                        
                         if (logContent.includes('Téléchargement et conversion en MP3 terminés.')) {
-                            document.getElementById('log-content').innerText = 'Download complete. Log file will be deleted.';
+                            console.log("Téléchargement terminé.");
+                            document.getElementById('log-content').innerText += '\nTéléchargement terminé. Suppression des logs...';
+                            document.getElementById('cancel-download').style.display = 'none'; // Masquer le bouton d'annulation
+
+                            // Demander la suppression du fichier de log
                             var cleanupRequest = new XMLHttpRequest();
                             cleanupRequest.open('GET', 'pages/add_music_or_playlist.php?action=cleanup_log', true);
+                            cleanupRequest.onreadystatechange = function() {
+                                if (cleanupRequest.readyState === 4 && cleanupRequest.status === 200) {
+                                    console.log("Logs supprimés.");
+                                    document.getElementById('log-content').innerText += '\nLogs supprimés.';
+                                    setTimeout(function() {
+                                        document.getElementById('log-content').innerText = 'Logs supprimés. Vous pouvez continuer à utiliser l\'application.';
+                                    }, 2000);
+                                    clearInterval(logInterval);
+                                }
+                            };
                             cleanupRequest.send();
-                        } else {
-                            document.getElementById('log-content').innerText = logContent;
                         }
                     }
                 };
                 xhr.send();
             }
 
-            setInterval(refreshLog, 5000);
+            var logInterval = setInterval(refreshLog, 5000);
             window.onload = refreshLog;
+
+            document.getElementById('cancel-download').addEventListener('click', function() {
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', 'pages/add_music_or_playlist.php?action=stop_download', true);
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        console.log(xhr.responseText);
+                        document.getElementById('log-content').innerText = xhr.responseText;
+                        document.getElementById('cancel-download').style.display = 'none'; // Masquer le bouton d'annulation
+                        clearInterval(logInterval); // Arrêter l'intervalle de mise à jour des logs
+                    }
+                };
+                xhr.send();
+            });
         </script>
+
 
     </body>
 </html>
